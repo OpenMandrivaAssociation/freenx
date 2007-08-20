@@ -106,7 +106,7 @@ fi
 
 %post
 # make a link from %{_usr}/X11R6/lib/X11/fonts -> %{_datadir}/fonts if needed
-[ ! -d %{_usr}/X11R6/lib/X11/fonts ] && %{__ln_s} %{_datadir}/fonts %{buildroot}%{_usr}/X11R6/lib/X11/ 
+[ ! -d %{_usr}/X11R6/lib/X11/fonts ] && %{__ln_s} %{_datadir}/fonts %{_usr}/X11R6/lib/X11/ 
 if [ $1 = 1 ]; then
         %{_bindir}/ssh-keygen -f %{_sysconfdir}/nxserver/users.id_dsa -t dsa -N "" 2>&1 > /dev/null
         %{__chown} nx.root %{_sysconfdir}/nxserver/users.id_dsa 
