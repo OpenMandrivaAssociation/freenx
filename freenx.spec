@@ -25,7 +25,6 @@ Requires:       xterm
 Requires(pre):  rpm-helper
 Requires(post): expect
 BuildArch:      noarch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
 NoMachine NX is the next-generation X compression and roundtrip 
