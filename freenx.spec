@@ -15,6 +15,8 @@ Source0:        http://download.berlios.de/freenx/freenx-%{version}.tar.gz
 Source1:        freenx-nxserver.logrotate
 Patch0:         freenx-nxsetup-warning.patch
 Patch1:         freenx-0.7.1-0.7.2-405-417.patch
+Patch2:         freenx-nxagent-3.1.0.patch
+Patch3:         freenx-nxserver-removeunix-sockets.patch
 Requires:       expect
 Requires:       netcat
 Requires:       nxagent
@@ -40,6 +42,8 @@ component.
 %setup -q
 #%patch0 -p1
 %patch1 -p1
+%patch2 -p0
+%patch3 -p0
 
 %build
 %{__perl} -pi -e "s|/var/lib/nxserver/home|%{_localstatedir}/nxserver/nxhome|" nxloadconfig
