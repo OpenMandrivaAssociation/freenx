@@ -6,7 +6,7 @@
 
 Summary:        Free NX implementation
 Name:           freenx
-Version:        0.7.0
+Version:        0.7.1
 Release:        %mkrel 1
 License:        GPL
 Group:          Networking/Remote access
@@ -14,6 +14,7 @@ URL:            http://freenx.berlios.de/
 Source0:        http://download.berlios.de/freenx/freenx-%{version}.tar.gz
 Source1:        freenx-nxserver.logrotate
 Patch0:         freenx-nxsetup-warning.patch
+Patch1:         freenx-0.7.1-0.7.2-405-417.patch
 Requires:       expect
 Requires:       netcat
 Requires:       nxagent
@@ -37,7 +38,8 @@ component.
  
 %prep
 %setup -q
-%patch0 -p1
+#%patch0 -p1
+%patch1 -p1
 
 %build
 %{__perl} -pi -e "s|/var/lib/nxserver/home|%{_localstatedir}/nxserver/nxhome|" nxloadconfig
@@ -69,7 +71,7 @@ EOF
 %{__rm} -rf %{buildroot}
 %{__mkdir_p} %{buildroot}%{_bindir}
 %{__mkdir_p} %{buildroot}%{_sbindir}
-%{__install} -m 755 {nxclient,nxkeygen,nxloadconfig,nxnode,nxnode-login,nxserver} %{buildroot}%{_bindir}
+%{__install} -m 755 {nxdialog,nxkeygen,nxloadconfig,nxnode,nxnode-login,nxserver} %{buildroot}%{_bindir}
 %{__install} -m 755 nxsetup %{buildroot}%{_sbindir}
 
 %{__mkdir_p} %{buildroot}%{_localstatedir}/nxserver/nxhome/.ssh
@@ -137,7 +139,7 @@ fi
 %files
 %defattr(0644,root,root,0755)
 %doc AUTHORS COPYING README.urpmi
-%attr(0755,root,root) %{_bindir}/nxclient
+%attr(0755,root,root) %{_bindir}/nxdialog
 %attr(0755,root,root) %{_bindir}/nxkeygen
 %attr(0755,root,root) %{_bindir}/nxloadconfig
 %attr(0755,root,root) %{_bindir}/nxnode
