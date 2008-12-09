@@ -6,17 +6,15 @@
 
 Summary:        Free NX implementation
 Name:           freenx
-Version:        0.7.1
-Release:        %mkrel 7
-License:        GPL
+Version:        0.7.3
+Release:        %mkrel 1
+License:        GPLv2
 Group:          Networking/Remote access
 URL:            http://freenx.berlios.de/
-Source0:        http://download.berlios.de/freenx/freenx-%{version}.tar.gz
+Source0:        http://download.berlios.de/freenx/freenx-server-%{version}.tar.gz
 Source1:        freenx-nxserver.logrotate
 Patch0:         freenx-nxsetup-warning.patch
-Patch1:         freenx-0.7.1-0.7.2-405-417.patch
-Patch2:         freenx-nxagent-3.1.0.patch
-Patch3:         freenx-nxserver-removeunix-sockets.patch
+Patch2:         freenx-0.7.3-nxagent_3.3.0.patch
 Requires:       expect
 Requires:       netcat
 Requires:       nxagent
@@ -39,11 +37,8 @@ This package contains a free (GPL) implementation of the nxserver
 component.
  
 %prep
-%setup -q
-#%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p0
+%setup -q -n %{name}-server-%{version}
+%patch2 -p1 -b .nxagent_version
 
 %build
 %{__perl} -pi -e "s|/var/lib/nxserver/home|%{_localstatedir}/lib/nxserver/nxhome|" nxloadconfig
@@ -142,7 +137,7 @@ fi
 
 %files
 %defattr(0644,root,root,0755)
-%doc AUTHORS COPYING README.urpmi
+%doc AUTHORS README.urpmi
 %attr(0755,root,root) %{_bindir}/nxdialog
 %attr(0755,root,root) %{_bindir}/nxkeygen
 %attr(0755,root,root) %{_bindir}/nxloadconfig
