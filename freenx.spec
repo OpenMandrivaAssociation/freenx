@@ -7,7 +7,7 @@
 Summary:        Free NX implementation
 Name:           freenx
 Version:        0.7.3
-Release:        %mkrel 1
+Release:        %mkrel 2
 License:        GPLv2
 Group:          Networking/Remote access
 URL:            http://freenx.berlios.de/
@@ -25,7 +25,6 @@ Requires:       xmessage
 Requires:       xterm
 Requires(pre):  rpm-helper
 Requires(post): expect
-BuildArch:      noarch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
@@ -42,6 +41,9 @@ component.
 
 %build
 %{__perl} -pi -e "s|/var/lib/nxserver/home|%{_localstatedir}/lib/nxserver/nxhome|" nxloadconfig
+pushd nxserver-helper
+%make
+popd
 
 # README.install.urpmi doesn't work yet.
 %{__cat} << EOF > README.urpmi
@@ -70,7 +72,7 @@ EOF
 %{__rm} -rf %{buildroot}
 %{__mkdir_p} %{buildroot}%{_bindir}
 %{__mkdir_p} %{buildroot}%{_sbindir}
-%{__install} -m 755 {nxdialog,nxkeygen,nxloadconfig,nxnode,nxnode-login,nxserver} %{buildroot}%{_bindir}
+%{__install} -m 755 {nxdialog,nxkeygen,nxloadconfig,nxnode,nxnode-login,nxserver,nxserver-helper/nxserver-helper} %{buildroot}%{_bindir}
 %{__install} -m 755 nxsetup %{buildroot}%{_sbindir}
 
 %{__mkdir_p} %{buildroot}%{_localstatedir}/lib/nxserver/nxhome/.ssh
@@ -144,6 +146,7 @@ fi
 %attr(0755,root,root) %{_bindir}/nxnode
 %attr(0755,root,root) %{_bindir}/nxnode-login
 %attr(0755,root,root) %{_bindir}/nxserver
+%attr(0755,root,root) %{_bindir}/nxserver-helper
 %attr(0755,root,root) %{_sbindir}/nxsetup
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
 %attr(755,nx,root) %dir %{_sysconfdir}/nxserver
