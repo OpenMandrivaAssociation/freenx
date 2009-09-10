@@ -7,7 +7,7 @@
 Summary:        Free NX implementation
 Name:           freenx
 Version:        0.7.3
-Release:        %mkrel 2
+Release:        %mkrel 3
 License:        GPLv2
 Group:          Networking/Remote access
 URL:            http://freenx.berlios.de/
