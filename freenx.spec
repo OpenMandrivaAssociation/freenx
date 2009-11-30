@@ -7,7 +7,7 @@
 Summary:        Free NX implementation
 Name:           freenx
 Version:        0.7.3
-Release:        %mkrel 3
+Release:        %mkrel 4
 License:        GPLv2
 Group:          Networking/Remote access
 URL:            http://freenx.berlios.de/
@@ -83,7 +83,7 @@ EOF
 /bin/touch %{buildroot}%{_localstatedir}/lib/nxserver/nxhome/.ssh/{server.id_dsa.pub.key,client.id_dsa.key,authorized_keys2,known_hosts}
 /bin/touch %{buildroot}%{_logdir}/nxserver.log
 %{__install} node.conf.sample %{buildroot}%{_sysconfdir}/nxserver/node.conf
-/bin/echo 'ENABLE_1_5_0_BACKEND="1"' >> %{buildroot}%{_sysconfdir}/nxserver/node.conf
+#/bin/echo 'ENABLE_1_5_0_BACKEND="1"' >> %{buildroot}%{_sysconfdir}/nxserver/node.conf
 /bin/echo 'ENABLE_2_0_0_BACKEND="1"' >> %{buildroot}%{_sysconfdir}/nxserver/node.conf
 /bin/echo 'ENABLE_ROOTLESS_MODE="1"' >> %{buildroot}%{_sysconfdir}/nxserver/node.conf
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/logrotate.d
