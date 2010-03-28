@@ -7,7 +7,7 @@
 Summary:        Free NX implementation
 Name:           freenx
 Version:        0.7.3
-Release:        %mkrel 4
+Release:        %mkrel 5
 License:        GPLv2
 Group:          Networking/Remote access
 URL:            http://freenx.berlios.de/
@@ -15,6 +15,9 @@ Source0:        http://download.berlios.de/freenx/freenx-server-%{version}.tar.g
 Source1:        freenx-nxserver.logrotate
 Patch0:         freenx-nxsetup-warning.patch
 Patch2:         freenx-0.7.3-nxagent_3.3.0.patch
+# add patch from CentOS to use the init script to make sure /tmp/.X11-unix exists
+# otherwise freenx fails to work, also the init script cleans out dead NX sessions
+Patch3:		freenx-0.7.2-initd-script.patch
 Requires:       expect
 Requires:       netcat
 Requires:       nxagent
@@ -38,6 +41,7 @@ component.
 %prep
 %setup -q -n %{name}-server-%{version}
 %patch2 -p1 -b .nxagent_version
+%patch3 -p1 -b .init
 
 %build
 %{__perl} -pi -e "s|/var/lib/nxserver/home|%{_localstatedir}/lib/nxserver/nxhome|" nxloadconfig
@@ -89,7 +93,8 @@ EOF
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/logrotate.d
 %{__cp} -a %{SOURCE1} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 
-
+# install init script
+install -D -m 755 init.d/freenx-server %{buildroot}%{_initrddir}/freenx-server
 
 # tell spec-helper to not remove passwords.orig
 export DONT_CLEANUP=1
@@ -108,6 +113,8 @@ if [ $1 = 0 ]; then
 fi
 
 %post
+%_post_service freenx-server
+
 # make a link from %{_usr}/X11R6/lib/X11/fonts -> %{_datadir}/fonts if needed
 [ ! -d %{_usr}/X11R6/lib/X11/fonts ] && %{__ln_s} %{_datadir}/fonts %{_usr}/X11R6/lib/X11/ 
 if [ $1 = 1 ]; then
@@ -137,6 +144,9 @@ EOF
         %{_bindir}/mkpasswd -l 32 | %{_bindir}/passwd --stdin nx 2>&1 > /dev/null
 fi
 
+%preun
+%_preun_service freenx-server
+
 %files
 %defattr(0644,root,root,0755)
 %doc AUTHORS README.urpmi
@@ -149,6 +159,7 @@ fi
 %attr(0755,root,root) %{_bindir}/nxserver-helper
 %attr(0755,root,root) %{_sbindir}/nxsetup
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
+%attr(0755,root,root) %{_initrddir}/freenx-server
 %attr(755,nx,root) %dir %{_sysconfdir}/nxserver
 %attr(755,nx,root) %dir %{_localstatedir}/lib/nxserver
 %attr(755,nx,root) %dir %{_localstatedir}/lib/nxserver/db
