@@ -7,17 +7,14 @@
 Summary:        Free NX implementation
 Name:           freenx
 Version:        0.7.3
-Release:        %mkrel 5
+Release:        %mkrel 6
 License:        GPLv2
 Group:          Networking/Remote access
 URL:            http://freenx.berlios.de/
 Source0:        http://download.berlios.de/freenx/freenx-server-%{version}.tar.gz
 Source1:        freenx-nxserver.logrotate
-Patch0:         freenx-nxsetup-warning.patch
-Patch2:         freenx-0.7.3-nxagent_3.3.0.patch
-# add patch from CentOS to use the init script to make sure /tmp/.X11-unix exists
-# otherwise freenx fails to work, also the init script cleans out dead NX sessions
-Patch3:         freenx-0.7.2-initd-script.patch
+Patch0:         freenx-server-0.7.3-lp-fixes.patch
+Patch1:         freenx-server-r104-fixes.patch
 Requires:       expect
 Requires:       netcat
 Requires:       nxagent
@@ -40,8 +37,8 @@ component.
  
 %prep
 %setup -q -n %{name}-server-%{version}
-%patch2 -p1 -b .nxagent_version
-%patch3 -p1 -b .init
+%patch0 -p1 -b .lp
+%patch1 -p1 -b .fixes
 
 %build
 perl -pi -e "s|/var/lib/nxserver/home|%{_localstatedir}/lib/nxserver/nxhome|" nxloadconfig
