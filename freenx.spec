@@ -7,7 +7,7 @@
 Summary:        Free NX implementation
 Name:           freenx
 Version:        0.7.3
-Release:        %mkrel 8
+Release:        %mkrel 9
 License:        GPLv2
 Group:          Networking/Remote access
 URL:            http://freenx.berlios.de/
@@ -15,6 +15,7 @@ Source0:        http://download.berlios.de/freenx/freenx-server-%{version}.tar.g
 Source1:        freenx-nxserver.logrotate
 Patch0:         freenx-server-0.7.3-lp-fixes.patch
 Patch1:         freenx-server-r104-fixes.patch
+Patch2:		freenx-server-0.7.3-connection-fix.patch
 Requires:       expect
 Requires:       netcat
 Requires:       nxagent
@@ -39,6 +40,7 @@ component.
 %setup -q -n %{name}-server-%{version}
 %patch0 -p1 -b .lp
 %patch1 -p1 -b .fixes
+%patch2 -p0 -b .connection-fix
 
 %build
 perl -pi -e "s|/var/lib/nxserver/home|%{_localstatedir}/lib/nxserver/nxhome|" nxloadconfig
