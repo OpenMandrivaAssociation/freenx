@@ -1,0 +1,29 @@
+--- nxserver.bak	2011-02-13 16:37:48.284013842 -0500
++++ nxserver	2011-02-13 16:41:25.180489647 -0500
+@@ -1447,7 +1447,7 @@
+ 			# Now check for the other enabled services
+ 			
+ 			let SAMBA_DISPLAY=$SESS_DISPLAY+3000
+-			if [ "$(getparam 'samba')" = 1 ] && $COMMAND_NETCAT -z "$SERVER_HOST" $SAMBA_DISPLAY
++			if [ "$(getparam 'samba')" = 1 ] && $COMMAND_NETCAT -z "$SERVER_HOST" $SAMBA_DISPLAY 2>/dev/null
+ 			then
+ 				log 2 "Warning: Skipping $SERVER_HOST:$AGENT_DISPLAY as samba port is not free."
+ 				let SESS_DISPLAY=$SESS_DISPLAY+1
+@@ -1455,7 +1455,7 @@
+ 			fi
+ 			
+ 			let MEDIA_DISPLAY=$SESS_DISPLAY+7000
+-			if [ "$(getparam 'media')" = 1 ] && $COMMAND_NETCAT -z "$SERVER_HOST" $MEDIA_DISPLAY
++			if [ "$(getparam 'media')" = 1 ] && $COMMAND_NETCAT -z "$SERVER_HOST" $MEDIA_DISPLAY 2>/dev/null
+ 			then
+ 				log 2 "Warning: Skipping $SERVER_HOST:$AGENT_DISPLAY as media port is not free."
+ 				let SESS_DISPLAY=$SESS_DISPLAY+1
+@@ -1464,7 +1464,7 @@
+ 
+ 			
+ 			let CUPS_DISPLAY=$SESS_DISPLAY+9000
+-			if [ "$(getparam 'cups')" = 1 ] && $COMMAND_NETCAT -z "$SERVER_HOST" $CUPS_DISPLAY
++			if [ "$(getparam 'cups')" = 1 ] && $COMMAND_NETCAT -z "$SERVER_HOST" $CUPS_DISPLAY 2>/dev/null
+ 			then
+ 				log 2 "Warning: Skipping $SERVER_HOST:$AGENT_DISPLAY as cups port is not free."
+ 				let SESS_DISPLAY=$SESS_DISPLAY+1
