@@ -1,0 +1,8 @@
+/var/log/nxserver.log { 
+	compress
+	create 600 nx root
+	notifempty
+	missingok
+	monthly
+}
+
