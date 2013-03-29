@@ -7,7 +7,7 @@
 Summary:        Free NX implementation
 Name:           freenx
 Version:        0.7.3
-Release:        %mkrel 10
+Release:        11
 License:        GPLv2
 Group:          Networking/Remote access
 URL:            http://freenx.berlios.de/
@@ -16,6 +16,7 @@ Source1:        freenx-nxserver.logrotate
 Patch0:         freenx-server-0.7.3-lp-fixes.patch
 Patch1:         freenx-server-r104-fixes.patch
 Patch2:		freenx-server-0.7.3-connection-fix.patch
+Patch3:		freenx-server-0.7.3-authkeys2.patch
 Requires:       expect
 Requires:       netcat
 Requires:       nxagent
@@ -26,7 +27,6 @@ Requires:       xmessage
 Requires:       xterm
 Requires(pre):  rpm-helper
 Requires(post): expect
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
 NoMachine NX is the next-generation X compression and roundtrip 
@@ -41,6 +41,7 @@ component.
 %patch0 -p1 -b .lp
 %patch1 -p1 -b .fixes
 %patch2 -p0 -b .connection-fix
+%patch3 -p1 -b .authkeys2
 
 %build
 perl -pi -e "s|/var/lib/nxserver/home|%{_localstatedir}/lib/nxserver/nxhome|" nxloadconfig
@@ -83,7 +84,7 @@ mkdir -p %{buildroot}%{_localstatedir}/lib/nxserver/db/{closed,failed,running}
 mkdir -p %{buildroot}%{_sysconfdir}/nxserver
 mkdir -p %{buildroot}%{_logdir}
 /bin/touch %{buildroot}%{_sysconfdir}/nxserver/{passwords,passwords.orig,users.id_dsa,users.id_dsa.pub}
-/bin/touch %{buildroot}%{_localstatedir}/lib/nxserver/nxhome/.ssh/{server.id_dsa.pub.key,client.id_dsa.key,authorized_keys2,known_hosts}
+/bin/touch %{buildroot}%{_localstatedir}/lib/nxserver/nxhome/.ssh/{server.id_dsa.pub.key,client.id_dsa.key,authorized_keys,known_hosts}
 /bin/touch %{buildroot}%{_logdir}/nxserver.log
 install node.conf.sample %{buildroot}%{_sysconfdir}/nxserver/node.conf
 #/bin/echo 'ENABLE_1_5_0_BACKEND="1"' >> %{buildroot}%{_sysconfdir}/nxserver/node.conf
@@ -122,14 +123,14 @@ if [ $1 = 1 ]; then
         chmod 600 %{_sysconfdir}/nxserver/users.id_dsa
 
 %if %with NomachineKey
-        cat << EOF > %{_localstatedir}/lib/nxserver/nxhome/.ssh/authorized_keys2
+        cat << EOF > %{_localstatedir}/lib/nxserver/nxhome/.ssh/authorized_keys
 ssh-dss AAAAB3NzaC1kc3MAAACBAJe/0DNBePG9dYLWq7cJ0SqyRf1iiZN/IbzrmBvgPTZnBa5FT/0Lcj39sRYt1paAlhchwUmwwIiSZaON5JnJOZ6jKkjWIuJ9MdTGfdvtY1aLwDMpxUVoGwEaKWOyin02IPWYSkDQb6cceuG9NfPulS9iuytdx0zIzqvGqfvudtufAAAAFQCwosRXR2QA8OSgFWSO6+kGrRJKiwAAAIEAjgvVNAYWSrnFD+cghyJbyx60AAjKtxZ0r/Pn9k94Qt2rvQoMnGgt/zU0v/y4hzg+g3JNEmO1PdHh/wDPVOxlZ6Hb5F4IQnENaAZ9uTZiFGqhBO1c8Wwjiq/MFZy3jZaidarLJvVs8EeT4mZcWxwm7nIVD4lRU2wQ2lj4aTPcepMAAACANlgcCuA4wrC+3Cic9CFkqiwO/Rn1vk8dvGuEQqFJ6f6LVfPfRTfaQU7TGVLk2CzY4dasrwxJ1f6FsT8DHTNGnxELPKRuLstGrFY/PR7KeafeFZDf+fJ3mbX5nxrld3wi5titTnX+8s4IKv29HJguPvOK/SI7cjzA+SqNfD7qEo8= root@nettuno
 EOF
 %else
         %{_bindir}/ssh-keygen -q -t dsa -N '' -f %{_localstatedir}/lib/nxserver/nxhome/.ssh/local.id_dsa 2>&1 > /dev/null
         mv -f %{_localstatedir}/lib/nxserver/nxhome/.ssh/local.id_dsa %{_localstatedir}/lib/nxserver/nxhome/.ssh/client.id_dsa.key
         mv -f %{_localstatedir}/lib/nxserver/nxhome/.ssh/local.id_dsa.pub %{_localstatedir}/lib/nxserver/nxhome/.ssh/server.id_dsa.pub.key
-        cat %{_localstatedir}/lib/nxserver/nxhome/.ssh/server.id_dsa.pub.key >  %{_localstatedir}/lib/nxserver/nxhome/.ssh/authorized_keys2
+        cat %{_localstatedir}/lib/nxserver/nxhome/.ssh/server.id_dsa.pub.key >  %{_localstatedir}/lib/nxserver/nxhome/.ssh/authorized_keys
         
 %endif
         /bin/echo -n "127.0.0.1 " > %{_localstatedir}/lib/nxserver/nxhome/.ssh/known_hosts
@@ -173,7 +174,7 @@ fi
 %attr(644,root,root) %ghost %{_sysconfdir}/nxserver/users.id_dsa.pub
 %attr(600,nx,root) %ghost %{_sysconfdir}/nxserver/passwords.orig
 %attr(600,nx,root) %ghost %{_localstatedir}/lib/nxserver/nxhome/.ssh/known_hosts
-%attr(600,nx,root) %ghost %{_localstatedir}/lib/nxserver/nxhome/.ssh/authorized_keys2
+%attr(600,nx,root) %ghost %{_localstatedir}/lib/nxserver/nxhome/.ssh/authorized_keys
 %attr(600,nx,root) %ghost %{_localstatedir}/lib/nxserver/nxhome/.ssh/client.id_dsa.key
 %attr(600,nx,root) %ghost %{_localstatedir}/lib/nxserver/nxhome/.ssh/server.id_dsa.pub.key
 # E: freenx non-root-user-log-file /var/log/nxserver.log nx
