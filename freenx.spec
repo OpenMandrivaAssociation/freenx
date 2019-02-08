@@ -4,6 +4,8 @@
 # and an SSH key is generated at install time.
 %bcond_with NomachineKey
 
+%define debug_package %{nil}
+
 Summary:        Free NX implementation
 Name:           freenx
 Version:        0.7.3
