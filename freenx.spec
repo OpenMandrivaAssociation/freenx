@@ -12,7 +12,7 @@ Version:        0.7.3
 Release:        12
 License:        GPLv2
 Group:          Networking/Remote access
-URL:            http://freenx.berlios.de/
+URL:            https://freenx.berlios.de/
 Source0:        http://download.berlios.de/freenx/freenx-server-%{version}.tar.gz
 Source1:        freenx-nxserver.logrotate
 Patch0:         freenx-server-0.7.3-lp-fixes.patch
